@@ -1999,7 +1999,7 @@ class CommandVisualLineMode extends BaseCommand {
   keys = ['V'];
 
   public async exec(position: Position, vimState: VimState): Promise<VimState> {
-    // vimState.currentMode = ModeName.VisualLine;
+    vimState.currentMode = ModeName.VisualLine;
 
     return vimState;
   }
