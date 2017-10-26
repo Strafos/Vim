@@ -431,6 +431,43 @@ class CommandNextSearchMatch extends BaseMovement {
 }
 
 @RegisterAction
+class CommandHighlightNextSearchMatch extends BaseMovement {
+  keys = ['g', 'n'];
+  // modes = [ModeName.Normal] // TODO check
+
+  public async execAction(position: Position, vimState: VimState): Promise<Position>{
+    const searchState = vimState.globalState.searchState;
+
+    if (!searchState || searchState.searchString === '') {
+      return position
+    }
+
+    // Turn one of the highlighting flags back on (turned off with :nohl)
+    // TODO not sure what this is for
+    vimState.globalState.hl = true;
+
+    vimState.currentMode = ModeName.Visual;
+
+    // if (vimState.cursorPosition.getRight().isEqual(vimState.cursorPosition.getLineEnd())) {
+    //   const searchStartPos = searchState.getNextSearchMatchPosition(vimState.cursorPosition.getRight()).pos;
+    //   const searchEndPos = new Position(
+    //     searchStartPos.line,
+    //     searchStartPos.character + searchState.searchString.length
+    //   );
+    //   return searchEndPos.getLeft()
+    // }
+
+    const searchStartPos = searchState.getNextSearchMatchPosition(vimState.cursorPosition.getRight()).pos;
+    const searchEndPos = new Position(
+      searchStartPos.line,
+      searchStartPos.character + searchState.searchString.length
+    );
+    return searchEndPos.getLeft();
+    // return searchState.getNextSearchMatchPosition(vimState.cursorPosition).pos;
+  }
+}
+
+@RegisterAction
 class CommandPreviousSearchMatch extends BaseMovement {
   keys = ['N'];
 
